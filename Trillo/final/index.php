@@ -206,7 +206,7 @@
                             <h2 class="cta__book-now">
                                 Good news! We have 4 free rooms for your selected dates!
                             </h2>
-                            <a href="book.php">
+                            <a href="login.php">
                                 <button class="btn">
                                     <span class="btn__visible">Book now</span>
                                     <span class="btn__invisible">Only 4 rooms left</span>

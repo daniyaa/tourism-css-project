@@ -1,17 +1,6 @@
-<?php
-include('database.inc.php');
-$msg = "";
-if (isset($_POST['submit'])) {
-    $name = mysqli_real_escape_string($con, $_POST['name']);
-    $email = mysqli_real_escape_string($con, $_POST['email']);
-    $mobile = mysqli_real_escape_string($con, $_POST['mobile']);
-    $rooms = mysqli_real_escape_string($con, $_POST['rooms']);
-    mysqli_query($con, "insert into detail(name,email,mobile,rooms) values('$name','$email','$mobile', '$rooms')");
-    $msg = "Booked Successfully";
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,6 +10,49 @@ if (isset($_POST['submit'])) {
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>trillo &mdash; Your all-in-one booking app</title>
+    <!--jQuery-->
+    <script src="js/jquery.js"></script>
+    <!-- Script -->
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $("#login").click(function() {
+
+                email = $("#email").val();
+                password = $("#password").val();
+                $.ajax({
+                    type: "POST",
+                    url: "pcheck.php",
+                    data: "email=" + email + "&password=" + password,
+                    success: function(html) {
+                        if (html == 'true') {
+
+                            $("#add_err2").html('<div class="alert alert-success"> \
+													<strong>Authenticated</strong> \ \
+												</div>');
+
+                            window.location.href = "book.php";
+
+                        } else if (html == 'false') {
+                            $("#add_err2").html('<div class="alert alert-danger"> \
+													<strong>Authentication</strong> failure. \ \
+												</div>');
+
+
+                        } else {
+                            $("#add_err2").html('<div class="alert alert-danger"> \
+													<strong>Error</strong> processing request. Please try again. \ \
+												</div>');
+                        }
+                    },
+                    beforeSend: function() {
+                        $("#add_err2").html("loading...");
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -100,46 +132,31 @@ if (isset($_POST['submit'])) {
                     <div class="description">
                         <div class="col-lg-12">
                             <hr>
-                            <h1 class="text-center">Book
-                                <strong>Now</strong>
+                            <h1 class="text-center">Login
+
                             </h1>
                             <hr>
                             <div id="add_err2"></div>
-                            <form method="post" id="frmContactus">
-                                <div class="contact-form">
-                                    <div class="form-group">
-                                        <label>Name:</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" id="name" name="name" required>
-                                        </div>
+                            <form role="form">
+                                <div class="row">
+                                    <div class="form-group col-lg-12">
+                                        <label>Email Address</label>
+                                        <input type="email" id="email" name="email" maxlength="25" class="form-control">
                                     </div>
-                                    <div class="form-group">
-                                        <label>Email:</label>
-                                        <div class="col-sm-10">
-                                            <input type="email" class="form-control" id="email" name="email" required>
-                                        </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group col-lg-12">
+                                        <label>Password</label>
+                                        <input type="password" id="password" name="password" maxlength="10" class="form-control">
                                     </div>
-                                    <div class="form-group">
-                                        <label>Mobile:</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" id="mobile" name="mobile" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Rooms:</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" id="rooms" name="rooms" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="col-sm-offset-2 col-sm-10">
-                                            <button type="submit" class="btn btn-default" name="submit" id="submit">Submit</button>
-                                            <span style="color:green;"><?php echo $msg ?></span>
-                                        </div>
+                                    <div class="form-group col-lg-12">
+                                        <button type="submit" id="login" class="btn btn-warning">Login</button>
                                     </div>
                                 </div>
                             </form>
+
+                            <div class="form-group col-lg-12">
+                                <a href="register.php"><button type="submit" class="btn btn-warning">Not a Member? Register here</button></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -148,4 +165,5 @@ if (isset($_POST['submit'])) {
     </div>
     </div>
 </body>
+
 </html>
